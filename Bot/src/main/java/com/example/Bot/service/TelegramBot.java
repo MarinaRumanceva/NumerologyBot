@@ -579,5 +579,4 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
         return countDigits;
     }
-    //test
 }
