@@ -84,7 +84,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                             currentState = State.WAITING_FOR_BIRTHDATE3;
                             break;
                         default:
-                            sendMessage(chatId, "Извините, эта команда не поддерживается.");
+                            sendMessage(chatId, "Извините, эта команда не поддерживается!");
                     }
                     break;
 
