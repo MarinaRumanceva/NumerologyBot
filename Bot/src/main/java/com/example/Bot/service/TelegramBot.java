@@ -474,6 +474,8 @@ public class TelegramBot extends TelegramLongPollingBot {
                     }
                     else {
                         sendMessage(chatId, "Неверный формат. Пожалуйста, введите дату рождения в формате 'ДД.ММ.ГГГГ'.");
+                        currentState = State.WAITING_FOR_BIRTHDATE;
+                        break;
                     }
                     currentState = State.BASE;
                     break;
@@ -747,6 +749,8 @@ public class TelegramBot extends TelegramLongPollingBot {
                         }
                     } else {
                         sendMessage(chatId, "Неверный формат. Пожалуйста, введите две даты рождения в формате 'ДД.ММ.ГГГГ ДД.ММ.ГГГГ'.");
+                        currentState = State.WAITING_FOR_BIRTHDATE2;
+                        break;
                     }
                     currentState = State.BASE;
                     break;
