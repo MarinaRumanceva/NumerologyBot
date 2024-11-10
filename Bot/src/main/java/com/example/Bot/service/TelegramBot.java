@@ -473,7 +473,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                         sendMessage(chatId, "Спасибо! Ваша дата рождения установлена на: " + messageText);
                     }
                     else {
-                        sendMessage(chatId, "Неверный формат. Пожалуйста, введите дату рождения в формате 'ДД.ММ.ГГГГ'.");
+                        sendMessage(chatId, "Неверный формат. Пожалуйста, введите Вашу дату рождения в формате 'ДД.ММ.ГГГГ'.");
                         currentState = State.WAITING_FOR_BIRTHDATE;
                         break;
                     }
@@ -748,7 +748,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                                 break;
                         }
                     } else {
-                        sendMessage(chatId, "Неверный формат. Пожалуйста, введите две даты рождения в формате 'ДД.ММ.ГГГГ ДД.ММ.ГГГГ'.");
+                        sendMessage(chatId, "Неверный формат. Пожалуйста, введите дату рождения партнёра в формате 'ДД.ММ.ГГГГ'.");
                         currentState = State.WAITING_FOR_BIRTHDATE2;
                         break;
                     }
