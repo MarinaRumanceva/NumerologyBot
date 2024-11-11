@@ -46,8 +46,8 @@ public class TelegramBot extends TelegramLongPollingBot {
         WAITING_FOR_BIRTHDATE,
         WAITING_FOR_BIRTHDATE2
     }
-    private State currentState = State.BASE;
 
+    private final Map<Long, State> userStates = new HashMap<>();
     private final Map<Long, String> userBirthdays = new HashMap<>();
 
     @Override
@@ -56,13 +56,14 @@ public class TelegramBot extends TelegramLongPollingBot {
         if (update.hasMessage() && update.getMessage().hasText()) {
             String messageText = update.getMessage().getText();
             long chatId = update.getMessage().getChatId();
+            State currentState = userStates.getOrDefault(chatId, State.BASE);
 
             switch (currentState) {
                 case BASE:
                     switch (messageText) {
                         case "/start":
                             startCommandReceived(chatId, update.getMessage().getChat().getFirstName());
-                            currentState = State.WAITING_FOR_BIRTHDATE;
+                            userStates.put(chatId, State.WAITING_FOR_BIRTHDATE);
                             break;
                         case "/help":
                             sendMessage(chatId, "Вы можете использовать следующие команды: \n\n" +
@@ -74,7 +75,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                             break;
                         case "/newdate":
                             sendMessage(chatId, "Пожалуйста, введите новую дату рождения в формате 'ДД.ММ.ГГГГ'.");
-                            currentState = State.WAITING_FOR_BIRTHDATE;
+                            userStates.put(chatId, State.WAITING_FOR_BIRTHDATE);
                             break;
                         case "/psquare":
                             sendPhoto(chatId, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSVRcuiB3tfdqrS1o5RPk4ayRQr62e5pOf9cplV1BNzpVEpGk303FLoi3mo87ZaAVjxfYk&usqp=CAU");
@@ -312,7 +313,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                                     sendMessage(chatId,"Пять девяток в квадрате Пифагора есть у людей, появившихся на свет в сентябре 1999 года. Такие люди живут в своей реальности. Много девяток в Матрице – это значит, что у человека особое восприятие мира, он не следует общепринятым нормам в обществе. Сверхчувствительный человек, который обижается по пустякам, это слабая и подвижная психика. Необходим индивидуальный подход во всем: в жизни, в работе, в обществе. Нужно окружать себя только доброжелательными людьми и избегать критиков. \n\n");
                                 }
                             }
-                            String out = "Визуализация Вашей психоматрицы: " + "\n" + String.format("%-5s| %-5s| %-5s", one, four, seven) + "\n" + "----------------" + "\n" + String.format("%-5s| %-5s| %-5s", two, five, eight) + "\n" + "----------------" + "\n" + String.format("%-5s| %-5s| %-5s", three, six, nine);
+                            String out = "Визуализация Вашей психоматрицы: " + "\n" + String.format("%-5s| %-5s| %-5s", one, four, seven) + "\n" + "---------------------" + "\n" + String.format("%-5s| %-5s| %-5s", two, five, eight) + "\n" + "---------------------" + "\n" + String.format("%-5s| %-5s| %-5s", three, six, nine);
                             sendMessage(chatId, out);
                             break;
                         case "/arcana":
@@ -460,7 +461,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                             break;
                         case "/compatibility":
                             sendMessage(chatId, "Пожалуйста, введите дату рождения партнёра в формате 'ДД.ММ.ГГГГ'.");
-                            currentState = State.WAITING_FOR_BIRTHDATE2;
+                            userStates.put(chatId, State.WAITING_FOR_BIRTHDATE2);
                             break;
                         default:
                             sendMessage(chatId, "Извините, эта команда не поддерживается.");
@@ -471,13 +472,12 @@ public class TelegramBot extends TelegramLongPollingBot {
                     if (isValidDate(messageText)) {
                         userBirthdays.put(chatId, messageText);
                         sendMessage(chatId, "Спасибо! Ваша дата рождения установлена на: " + messageText);
+                        userStates.put(chatId, State.BASE);
                     }
                     else {
                         sendMessage(chatId, "Неверный формат. Пожалуйста, введите Вашу дату рождения в формате 'ДД.ММ.ГГГГ'.");
-                        currentState = State.WAITING_FOR_BIRTHDATE;
-                        break;
+                        userStates.put(chatId, State.WAITING_FOR_BIRTHDATE);
                     }
-                    currentState = State.BASE;
                     break;
 
                 case WAITING_FOR_BIRTHDATE2:
@@ -747,12 +747,12 @@ public class TelegramBot extends TelegramLongPollingBot {
                                 }
                                 break;
                         }
-                    } else {
-                        sendMessage(chatId, "Неверный формат. Пожалуйста, введите дату рождения партнёра в формате 'ДД.ММ.ГГГГ'.");
-                        currentState = State.WAITING_FOR_BIRTHDATE2;
-                        break;
                     }
-                    currentState = State.BASE;
+                    else {
+                        sendMessage(chatId, "Неверный формат. Пожалуйста, введите дату рождения партнёра в формате 'ДД.ММ.ГГГГ'.");
+                        userStates.put(chatId, State.WAITING_FOR_BIRTHDATE2);
+                    }
+                    userStates.put(chatId, State.BASE);
                     break;
             }
         }
