@@ -747,12 +747,12 @@ public class TelegramBot extends TelegramLongPollingBot {
                                 }
                                 break;
                         }
+                        userStates.put(chatId, State.BASE);
                     }
                     else {
                         sendMessage(chatId, "Неверный формат. Пожалуйста, введите дату рождения партнёра в формате 'ДД.ММ.ГГГГ'.");
                         userStates.put(chatId, State.WAITING_FOR_BIRTHDATE2);
                     }
-                    userStates.put(chatId, State.BASE);
                     break;
             }
         }
