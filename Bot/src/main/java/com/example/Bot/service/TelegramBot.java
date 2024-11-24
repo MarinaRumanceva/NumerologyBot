@@ -90,7 +90,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                             int nine = 0;
                             int[] countDigits = calculatePythagoreanSquare(userBirthdays.get(chatId));
                             for (int i = 0; i < countDigits.length; i++) {
-                                sendMessage(chatId, "В Вашей психоматрице цифра " + i + " встречается " + countDigits[i] + " раз(а) \n\n");
+                                sendMessage(chatId, "В Вашей психоматрице цифра " + i+1 + " встречается " + countDigits[i] + " раз(а) \n\n");
                                 //Единицы
                                 if (i == 0 && countDigits[i] == 0) {
                                     one = 0;
