@@ -759,7 +759,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     }
 
     public synchronized void setButtons(SendMessage sendMessage) {
-        // Создаем клавиуатуру
+        // Создаем клавиатуру
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         sendMessage.setReplyMarkup(replyKeyboardMarkup);
         replyKeyboardMarkup.setSelective(true);
@@ -845,7 +845,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
     }
 
-    private int lifePathNumber(String date) {
+    public int lifePathNumber(String date) {
         date = date.substring(0, 2) + date.substring(3, 5) + date.substring(6);
         int number = 0;
         for (int i = 0; i < date.length(); i++) {
@@ -862,7 +862,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         return number;
     }
 
-    private int TaroArcana(String date) {
+    public int TaroArcana(String date) {
         date = date.substring(0, 2) + date.substring(3, 5) + date.substring(6);
         int arcana = 0;
         for (int i = 0; i < date.length(); i++) {
@@ -900,9 +900,6 @@ public class TelegramBot extends TelegramLongPollingBot {
         int month = Integer.parseInt(parts[1]);
         int year = Integer.parseInt(parts[2]);
 
-        int sumDayMonth = sumOfDigits(day) + sumOfDigits(month);
-        int sumYear = sumOfDigits(year);
-
         int firstWorkingNumber = sumOfDigits(day * 10000 + month * 100 + year);
         int secondWorkingNumber = digitalRoot(firstWorkingNumber);
         int firstDigitDay = Integer.parseInt(Integer.toString(day).substring(0, 1));
@@ -912,10 +909,13 @@ public class TelegramBot extends TelegramLongPollingBot {
         String firstRow = String.format("%d%d%d", day, month, year);
         String secondRow = String.format("%d%d%d%d", firstWorkingNumber, secondWorkingNumber, thirdWorkingNumber, fourthWorkingNumber);
 
-        int[] countDigits = new int[10];
+        int[] res = new int[10];
         for (char c : (firstRow + secondRow).toCharArray()) {
-            countDigits[Character.getNumericValue(c)]++;
+            res[Character.getNumericValue(c)]++;
         }
+        int[] countDigits = new int[9];
+        System.arraycopy(res, 1, countDigits, 0, 9); // Копируем элементы с 1 по 9
+
         return countDigits;
     }
 }
